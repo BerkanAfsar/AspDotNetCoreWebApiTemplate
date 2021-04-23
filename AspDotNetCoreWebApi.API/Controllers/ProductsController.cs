@@ -1,4 +1,5 @@
 ﻿using AspDotNetCoreWebApi.API.DTO;
+using AspDotNetCoreWebApi.API.Filter;
 using AspDotNetCoreWebApi.Core.Entity;
 using AspDotNetCoreWebApi.Core.Service;
 using AutoMapper;
@@ -29,6 +30,7 @@ namespace AspDotNetCoreWebApi.API.Controllers
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
         }
 
+        [ServiceFilter(typeof(NotFoundProductFilter))]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -37,6 +39,7 @@ namespace AspDotNetCoreWebApi.API.Controllers
             return Ok(_mapper.Map<ProductDto>(product));
         }
 
+        [ServiceFilter(typeof(NotFoundProductFilter))]
         [HttpGet("{id}/category")]
         public async Task<IActionResult> GetWithCategoryByIdAsync(int id)
         {
@@ -45,6 +48,7 @@ namespace AspDotNetCoreWebApi.API.Controllers
             return Ok(_mapper.Map<ProductWithCategoryDto>(product));
         }
 
+        //[ValidationFilter] -> startup dosyasına aldık ve tüm controllera eklenmiş oldu.
         [HttpPost]
         public async Task<IActionResult> Save(ProductDto productDto)
         {
@@ -61,6 +65,7 @@ namespace AspDotNetCoreWebApi.API.Controllers
             return NoContent();
         }
 
+        [ServiceFilter(typeof(NotFoundProductFilter))]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
