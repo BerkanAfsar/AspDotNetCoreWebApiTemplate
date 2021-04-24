@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AspDotNetCoreWebApi.API.Extension;
+using Microsoft.OpenApi.Models;
 
 namespace AspDotNetCoreWebApi.API
 {
@@ -30,6 +31,11 @@ namespace AspDotNetCoreWebApi.API
         // servisleri eklediğimiz yer
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Template API", Version = "V1"});
+            });
+
             services.AddAutoMapper(typeof(Startup)); // automapper için eklendi
 
             services.AddScoped<NotFoundProductFilter>(); // NotFoundFilter constructor da interface aldığı için buraya kaydediyoruz
@@ -75,6 +81,13 @@ namespace AspDotNetCoreWebApi.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseCustomException(); // UseCustomExceptionHandler extension nındaki metodu kullandık burda
 
